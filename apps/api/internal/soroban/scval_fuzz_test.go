@@ -61,6 +61,8 @@ func FuzzDecodeScVal(f *testing.F) {
 		f.Add(s)
 	}
 
+	// FuzzDecodeScVal executes without recovering panics so any decoder parser bugs or
+	// unexpected crashes directly trigger a test failure as required by issue #552.
 	f.Fuzz(func(t *testing.T, b64 string) {
 		got, err := DecodeScVal(b64)
 		if err != nil {
