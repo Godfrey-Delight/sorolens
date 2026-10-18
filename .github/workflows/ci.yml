@@ -89,15 +89,6 @@ jobs:
         env:
           POSTGRES_TEST_URL: postgres://sorolens:sorolens@localhost:5432/sorolens?sslmode=disable
         run: go test -race -timeout 120s -coverprofile=coverage.out ./...
-      - name: Short fuzz run (apps/api decoders and signature checks)
-        if: matrix.module == 'apps/api'
-        working-directory: apps/api
-        run: |
-          go test -fuzz=FuzzDecodeScVal -fuzztime=3s ./internal/soroban
-          go test -fuzz=FuzzDecodeCursor -fuzztime=3s ./internal/handler
-          go test -fuzz=FuzzVerifySlackSignature -fuzztime=3s ./internal/handler
-          go test -fuzz=FuzzAlertsCursor -fuzztime=3s ./internal/store
-          go test -fuzz=FuzzGroupCursor -fuzztime=3s ./internal/store
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v5
         with:

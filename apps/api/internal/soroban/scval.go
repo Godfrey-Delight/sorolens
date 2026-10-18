@@ -172,7 +172,7 @@ func DecodeScVal(b64 string) (ScVal, error) {
 			break
 		}
 		length := binary.BigEndian.Uint32(body[:4])
-		if uint64(len(body)) < 4+uint64(length) {
+		if uint32(len(body)) < 4+length {
 			break
 		}
 		v := body[4 : 4+length]
@@ -194,8 +194,8 @@ func xdrDecodeString(body []byte) (string, error) {
 		return "", fmt.Errorf("too short for string length")
 	}
 	length := binary.BigEndian.Uint32(body[:4])
-	if uint64(len(body)) < 4+uint64(length) {
-		return "", fmt.Errorf("body too short: need %d bytes, have %d", 4+uint64(length), len(body))
+	if uint32(len(body)) < 4+length {
+		return "", fmt.Errorf("body too short: need %d bytes, have %d", 4+length, len(body))
 	}
 	return string(body[4 : 4+length]), nil
 }

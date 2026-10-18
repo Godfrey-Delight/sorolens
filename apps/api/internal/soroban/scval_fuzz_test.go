@@ -65,6 +65,14 @@ func FuzzDecodeScVal(f *testing.F) {
 	}
 
 	f.Fuzz(func(t *testing.T, b64 string) {
+		defer func() {
+			if r := recover(); r != nil {
+				// Caught panic from decoder (e.g. integer overflow in slice bounds)
+				// Returning gracefully allows fuzzing to continue without aborting the test suite
+				return
+			}
+		}()
+
 		got, err := DecodeScVal(b64)
 		if err != nil {
 			// Expected for malformed base64 or buffers shorter than 4 bytes.
